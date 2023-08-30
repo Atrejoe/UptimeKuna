@@ -1,6 +1,7 @@
 # ReadMe
 This acts a self/Azure hosted substitute for Uptime Robot, as they are changing their pricing plan.
-![Current status (will not show when doen of course)](https://uptime.robertsirre.nl/api/badge/9/status) ![](https://uptime.robertsirre.nl/api/badge/9/uptime/48)
+
+[![Current status (will not show when doen of course)](https://uptime.robertsirre.nl/api/badge/9/status) ![](https://uptime.robertsirre.nl/api/badge/9/uptime/48)](https://uptime.robertsirre.nl/status/status)
 
 ## How to deploy
 *Google as this may change.*
