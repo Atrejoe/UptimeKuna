@@ -1,0 +1,60 @@
+version: '3.3'
+
+services:
+
+  # Uptime Kuma is the actual application
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    # This will create an Azure FQDN for the container which can be associated with a CNAME record
+    domainname: uptime-robertsirre-nl
+    volumes:
+      - uptime-kuma-data:/app/data
+    # Only expose within the internal network
+    expose:
+      - 3001:3001
+    # Restart the container if it crashes
+    restart: always
+  
+  # Caddy is used as a reverse proxy to enable HTTPS
+  # See Azure docs > Enable automatic HTTPS with Caddy in a sidecar container
+  # https://learn.microsoft.com/en-us/azure/container-instances/container-instances-container-group-automatic-ssl)
+  reverse-proxy:
+    image: caddy:2.6
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - proxy-caddyfile:/etc/caddy
+      - proxy-data:/data
+      - proxy-config:/config
+
+volumes:
+
+  # Stored UpTime Kuma data
+  uptime-kuma-data:
+    driver: azure_file
+    driver_opts:
+      share_name: uptime-kuma-data
+      storage_account_name: robertuptimekuma
+      storage_account_key: "${STORAGE_ACCOUNT_KEY}"
+
+  # Caddy configuration & data
+  proxy-caddyfile:
+    driver: azure_file
+    driver_opts:
+      share_name: proxy-caddyfile
+      storage_account_name: robertuptimekuma
+      storage_account_key: "${STORAGE_ACCOUNT_KEY}"
+  proxy-data:
+    driver: azure_file
+    driver_opts:
+      share_name: proxy-data
+      storage_account_name: robertuptimekuma
+      storage_account_key: "${STORAGE_ACCOUNT_KEY}"
+  proxy-config:
+    driver: azure_file
+    driver_opts:
+      share_name: proxy-config
+      storage_account_name: robertuptimekuma
+      storage_account_key: "${STORAGE_ACCOUNT_KEY}"
